@@ -1,0 +1,20 @@
+{
+    "name": "osinka/php-toggles",
+    "version": "1.0-dev",
+    "type": "library",
+    "description": "Feature toggle",
+    "keywords": ["feature", "flip", "switch", "trigger", "toggle"],
+    "homepage": "https://github.com/osinka/php-toggles",
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "Alexander Azarov",
+            "email": "azarov@osinka.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Osinka\\Toggles\\": "src/"
+        }
+    }
+}
