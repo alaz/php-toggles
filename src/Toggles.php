@@ -7,7 +7,7 @@ class Toggles {
 
   public static $toggles = array();
 
-  function __construct(array $toggleDef) {
+  function __construct(array $toggleDef, $cookieTTL = 0) {
     $inCookie = null;
     if (array_key_exists(self::TOGGLES_COOKIE, $_COOKIE)) {
       $inCookie = explode('|', $_COOKIE[self::TOGGLES_COOKIE]);
@@ -38,7 +38,8 @@ class Toggles {
     array_unique(self::$toggles);
 
     if (!isset($inCookie)) {
-      setrawcookie(self::TOGGLES_COOKIE, implode('|', self::current()));
+      $expire = $cookieTTL == 0 ? 0 : time() + $cookieTTL;
+      setrawcookie(self::TOGGLES_COOKIE, implode('|', self::current()), $expire);
     }
   }
 
