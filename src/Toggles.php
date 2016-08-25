@@ -13,19 +13,21 @@ class Toggles {
       $inCookie = explode('|', $_COOKIE[self::TOGGLES_COOKIE]);
     }
 
-
+    $forCookie = array();
     foreach ($toggleDef as $id => $def) {
       if ($def === FALSE) {
-      } elseif (isset($inCookie)) {
-        if (in_array($id, $inCookie)) {
-          self::$toggles[$id] = TRUE;
-        }
       } elseif ($def === TRUE) {
         self::$toggles[$id] = TRUE;
+      } elseif (isset($inCookie)) {
+        if (in_array($id, $inCookie)) {
+          $forCookie[] = $id;
+          self::$toggles[$id] = TRUE;
+        }
       } elseif (is_array($def)) {
         foreach ($def as $strategy) {
           $result = $strategy->enabled($id);
           if ($result === TRUE) {
+            $forCookie[] = $id;
             self::$toggles[$id] = TRUE;
           }
           if (!is_null($result)) {
@@ -35,11 +37,13 @@ class Toggles {
       }
     }
 
-    array_unique(self::$toggles);
+    array_unique($forCookie);
+    sort($forCookie);
+    $newCookie = implode('|', $forCookie);
 
-    if (!isset($inCookie)) {
+    if ($newCookie != $_COOKIE[self::TOGGLES_COOKIE]) {
       $expire = $cookieTTL == 0 ? 0 : time() + $cookieTTL;
-      setrawcookie(self::TOGGLES_COOKIE, implode('|', self::current()), $expire);
+      setrawcookie(self::TOGGLES_COOKIE, $newCookie, $expire);
     }
   }
 
